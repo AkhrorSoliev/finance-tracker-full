@@ -1,13 +1,14 @@
 import { useState } from 'react'
-
+import { useSignup } from '../../hooks/useSignup'
 function Signup() {
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const {error, isPending, signup} = useSignup()
 
   const hanldeSubmit = (e) => {
     e.preventDefault()
-    console.log(
+    signup(
       displayName,
       email,
       password
@@ -29,7 +30,10 @@ function Signup() {
           <span className='block text-base'>password:</span>
           <input onChange={(e) => {setPassword(e.target.value)}} placeholder="password" type="password" className='placeholder:text-base border-2 border-l-neutral-300 rounded focus:border-2 focus:border-green-300 focus:outline-none px-2 py-1' />
         </label>
-        <button type='submit' className='border-2 px-2 py-1 rounded border-green-400 hover:bg-green-400 hover:text-white text-base'>Sign Up</button>
+        {!isPending && <button type='submit' className='border-2 px-2 py-1 rounded border-green-400 hover:bg-green-400 hover:text-white text-base'>SignUp</button>}
+        {isPending && <button type='submit' className='border-2 px-2 py-1 rounded border-green-400 hover:bg-green-400 hover:text-white text-base' disabled>Loading...</button>}
+      
+        {error && <div>{error}</div>}
       </form>
     </div>
   )
