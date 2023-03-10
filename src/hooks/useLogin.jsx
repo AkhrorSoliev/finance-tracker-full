@@ -1,22 +1,21 @@
 import { useState } from "react";
 import { auth } from "../firebase/config";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAuthContext } from './useAuthContext'
 
-function useSignup() {
+function useLogin() {
   const [error, setError] = useState(null);
   const [isPending, setIsPending] = useState(false);
-  const {dispatch} = useAuthContext()
-  const signup = async (displayName, email, password) => {
+  const { dispatch } = useAuthContext()
+  const login = async (email, password) => {
     setIsPending(true);
     try {
-      const ref = await createUserWithEmailAndPassword(auth, email, password);
+      const ref = await signInWithEmailAndPassword(auth, email, password);
 
       if (!ref) {
-        throw new Error("Could not signup 😢");
+        throw new Error("Could not login 😢");
       }
 
-      await updateProfile(auth.currentUser, { displayName });
       dispatch({type: "SIGNIN", payload: ref.user})
       setIsPending(false);
       setError(null);
@@ -27,7 +26,7 @@ function useSignup() {
     }
   };
 
-  return { error, isPending, signup };
+  return { error, isPending, login };
 }
 
-export { useSignup };
+export { useLogin };
